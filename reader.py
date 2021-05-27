@@ -98,6 +98,9 @@ def readLength(wordCount, imageCount, codeBlockCount):
 
     readingTime = readingTime+imageTime + codeBlockTime
     print("raw reading time: " + repr(readingTime))
+    print("--------------------------")
+    print("Add the following beneath the section title:")
+    print ("[role='rolehtml']")
     print (repr(math.ceil(readingTime)) + " min read")
 
 
