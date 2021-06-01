@@ -4,6 +4,7 @@
 import os
 import math
 import sys
+import glob
   
 #The average reading speed in words per minute for adults
 averageSpeed = 200
@@ -11,6 +12,8 @@ averageSpeed = 200
 imageReadTime = 12
 #The time it takes to read a code block in seconds
 timeToReadCodeBlock = 30
+#Path for the file types to check
+filetypes = "/*-lecture-content.adoc"
 
 # Function to count number of characters, words, spaces and lines in a file
 def counter(fname):
@@ -71,6 +74,10 @@ def counter(fname):
             num_spaces = num_spaces + sum(1 for s in line 
                                 if s in (os.linesep, ' '))
       
+    #print file name
+    print("--------------------------")
+    print("Analysis of " + fname)
+    print("--------------------------")
     # printing total word count
     print("Number of words in text file: ", num_words)
       
@@ -103,17 +110,33 @@ def readLength(wordCount, imageCount, codeBlockCount):
     print ("[role='rolehtml']")
     print (repr(math.ceil(readingTime)) + " min read")
 
+def directoryProcess(path):
+    print("in directory")
+    #verify that there are lecture adoc files present
+    fileList = glob.glob(path + filetypes)
+    if (len(fileList) <= 0):
+        print("No relevant files found in directory")
+    else:
+        print("Relevant files found: ", len(fileList))
+        #iterate through list of adoc files calling counter
+        for filename in fileList:
+            counter(filename)
+    
+
 
 if __name__ == '__main__':
     if (len(sys.argv) < 2):
         print("You must include the target path and filename")
         print("Ex. `python3 reader.py /User/zpgutterman/lecture.adoc")
         sys.exit()
-    inputFile = sys.argv[1]
-    if not os.path.isfile(inputFile):
-        print('The file specified does not exist')
+    input = sys.argv[1]
+    if not os.path.isfile(input) and not os.path.isdir(input):
+        print('The file or directory specified does not exist')
         sys.exit()
-    try: 
-        counter(inputFile) 
+    try:
+        if (os.path.isfile(input)): 
+            counter(input)
+        elif (os.path.isdir(input)):
+            directoryProcess(input)
     except Exception as e: 
         print(e)
