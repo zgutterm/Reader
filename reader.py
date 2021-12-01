@@ -95,7 +95,7 @@ def counter(fname):
     readLength(num_words, num_images, num_codeblocks)
 
 
-def readLength(wordCount, imageCount, codeBlockCount):
+def readLength(lecture_word_count, ge_word_count, image_count, code_block_count):
     # Lecture
     total_lecture_time = lecture_word_count/lecture_read_speed
     # GE
@@ -114,20 +114,19 @@ def readLength(wordCount, imageCount, codeBlockCount):
     print("--------------------------")
     print("Add the following beneath the section title:")
     print ("[role='rolehtml']")
-    print("Approx. " + str(time_estimate) + " minutes"
-
-    return total_time
+    print("Approx. " + str(time_estimate) + " minutes")
 
 def directoryProcess(path):
     print("in directory")
     #verify that there are lecture adoc files present
-    fileList = glob.glob(path + filetypes)
-    if (len(fileList) <= 0):
+    file_list = glob.glob(path + adoc_pattern)
+    
+    if (len(file_list) <= 0):
         print("No relevant files found in directory")
     else:
-        print("Relevant files found: ", len(fileList))
+        print("Relevant files found: ", len(file_list))
         #iterate through list of adoc files calling counter
-        for filename in fileList:
+        for filename in file_list:
             counter(filename)
     
 
@@ -137,14 +136,18 @@ if __name__ == '__main__':
         print("You must include the target path and filename")
         print("Ex. `python3 reader.py /User/zpgutterman/lecture.adoc")
         sys.exit()
-    input = sys.argv[1]
-    if not os.path.isfile(input) and not os.path.isdir(input):
-        print('The file or directory specified does not exist')
-        sys.exit()
+    # if filename is included
+    file_input = sys.argv[1]
+
+    if not os.path.isfile(file_input):
+        #print("No file located, checking for directory...")
+        if not os.path.isdir(file_input):
+            print("Cannot find directory "+file_input)
+            sys.exit()
     try:
-        if (os.path.isfile(input)): 
-            counter(input)
-        elif (os.path.isdir(input)):
-            directoryProcess(input)
+        if (os.path.isfile(file_input)):
+            counter(file_input)
+        elif (os.path.isdir(file_input)):
+            directoryProcess(file_input)
     except Exception as e: 
         print(e)
