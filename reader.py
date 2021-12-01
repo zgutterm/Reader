@@ -5,19 +5,22 @@ import os
 import math
 import sys
 import glob
-  
-#The average reading speed in words per minute for adults
-averageSpeed = 200
-#The time to "read" each image in seconds
-imageReadTime = 12
-#The time it takes to read a code block in seconds
-timeToReadCodeBlock = 30
-#Path for the file types to check
-filetypes = "/*-lecture-content.adoc"
 
-# Function to count number of characters, words, spaces and lines in a file
+# Average reading speeds in words per minute
+lecture_read_speed = 120
+ge_read_speed = 60
+
+# Average time per element in seconds (independent of length)
+image_read_time = 12
+code_block_read_time = 20
+
+#Path for the file types to check
+adoc_pattern = "/*-lecture*.adoc"
+
+# Count number of characters, words, spaces and lines in a file
+
 def counter(fname):
-    inCodeBlock = False
+    in_code_block = False
     # variable to store total word count
     num_words = 0
       
@@ -56,14 +59,14 @@ def counter(fname):
                     # count number of images
                     num_images = num_images + 1
                 elif(wordslist[0].startswith("----")):
-                    if (inCodeBlock):
+                    if (in_code_block):
                         #End the codeblock and resume counting words 
                         num_codeblocks = num_codeblocks + 1 
-                        inCodeBlock = False  
+                        in_code_block = False  
                     else:
                         #First line in code block
-                        inCodeBlock = True
-                elif ((not wordslist[0].startswith("//")) and (not inCodeBlock)):
+                        in_code_block = True
+                elif ((not wordslist[0].startswith("//")) and (not in_code_block)):
                     # add words in this line to total words
                     num_words = num_words + len(wordslist)
         
@@ -93,22 +96,27 @@ def counter(fname):
 
 
 def readLength(wordCount, imageCount, codeBlockCount):
-    # Start with base level word count and average speed
-    readingTime = wordCount/averageSpeed 
+    # Lecture
+    total_lecture_time = lecture_word_count/lecture_read_speed
+    # GE
+    total_ge_time = ge_word_count/ge_read_speed  
+    # Images
+    total_image_time = (image_count * image_read_time) / 60
+    # Code Blocks
+    total_code_block_time = (code_block_count * code_block_read_time) / 60
+    # Total
+    total_time = total_lecture_time + total_ge_time + \
+        total_image_time + total_code_block_time
+    # Round to nearest 5 minutes (this is not meant to be precise)
+    time_estimate = (math.ceil(total_time/5))*5
 
-    #Add time for images, convert seconds to minutes
-    imageTime = (imageCount * imageReadTime) / 60
-
-    #add time for code blocks, convert time to minutes
-    codeBlockTime = (codeBlockCount * timeToReadCodeBlock) / 60
-
-
-    readingTime = readingTime+imageTime + codeBlockTime
-    print("raw reading time: " + repr(readingTime))
+    print("raw reading time: " + repr(total_time))
     print("--------------------------")
     print("Add the following beneath the section title:")
     print ("[role='rolehtml']")
-    print (repr(math.ceil(readingTime)) + " min read")
+    print("Approx. " + str(time_estimate) + " minutes"
+
+    return total_time
 
 def directoryProcess(path):
     print("in directory")
