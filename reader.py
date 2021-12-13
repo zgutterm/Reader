@@ -92,6 +92,7 @@ def counter(fname):
 
     # printing total codeblocks
     print("Number of code blocks in text file: ", num_codeblocks)
+    
     readLength(num_words, num_images, num_codeblocks)
 
 
@@ -120,7 +121,7 @@ def directoryProcess(path):
     print("in directory")
     #verify that there are lecture adoc files present
     file_list = glob.glob(path + adoc_pattern)
-    
+
     if (len(file_list) <= 0):
         print("No relevant files found in directory")
     else:
