@@ -10,19 +10,6 @@ from configparser import ConfigParser
 
 import oyaml as yaml
 
-##### These are pulled from config.ini #####
-
-#The average reading speed in words per minute for adults
-lecture_read_speed = 0
-ge_read_speed = 0
-#The time to "read" each image in seconds
-image_read_time = 0
-#The time it takes to read a code block in seconds
-code_block_read_time = 0
-
-quiz_time = 0
-
-#############################################
 
 #Path for the file types to check
 adoc_pattern = "*.adoc"

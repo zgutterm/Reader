@@ -1,9 +1,12 @@
 # clone multiple course repos
+# this utility included for convenience
+# it was used once - not the best solution to check all course files
 
 from git import Repo
 
-user = "t1s1"
-token = "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"
+# insert appropriate username and token below
+user = "github_username"
+token = "github_token"
 
 github_root = "github.com/RedHatTraining/"
 
